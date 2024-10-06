@@ -1,0 +1,26 @@
+language: generic
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - docker build -t rkhaskin/react-test -f ./client/Dockerfile.dev ./client
+
+script:
+  - docker run -e CI=true rkhaskin/react-test npm test
+
+after_success:
+  - docker build -t rkhaskin/multi-client ./client
+  - docker build -t rkhaskin/multi-nginx ./nginx
+  - docker build -t rkhaskin/multi-server ./server
+  - docker build -t rkhaskin/multi-worker ./worker
+
+  #login to docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+
+  #push images to docker hub
+  - docker push rkhaskin/multi-client
+  - docker push rkhaskin/multi-nginx
+  - docker push rkhaskin/multi-server
+  - docker push rkhaskin/multi-worker
