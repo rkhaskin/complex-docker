@@ -9,13 +9,8 @@ class Fib extends Component {
   };
 
   componentDidMount() {
-    console.log("cccccccccccccccc");
     this.fetchValues();
     this.fetchIndexes();
-  }
-
-  componentWillUnmount() {
-    console.log("ddddddddd");
   }
 
   async fetchValues() {
